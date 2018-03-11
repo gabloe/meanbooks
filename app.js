@@ -8,9 +8,15 @@ var book = require('./routes/book');
 var app = express();
 
 var mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
-mongoose.connect('mongodb://localhost/mean-angular5', { useMongoClient: true, promiseLibrary: require('bluebird') })
-  .then(() =>  console.log('connection succesful'))
+var env = require('dotenv').load();
+
+mongoose.connect("mongodb://"+process.env.COSMOSDB_USERNAME+".documents.azure.com:10255/"+process.env.COSMOSDB_DBNAME+"?ssl=true", {
+    auth: {
+      user: process.env.COSMOSDB_USERNAME,
+      password: process.env.COSMOSDB_PASSWORD
+    }
+  })
+  .then(() => console.log('connection successful'))
   .catch((err) => console.error(err));
 
 app.use(logger('dev'));
